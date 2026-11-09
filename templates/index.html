@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10172b">
+  <title>TruthLens AI — News Intelligence</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" data-view-link="overview">
+        <span class="brand-mark">TL</span>
+        <span><strong>TruthLens <i>AI</i></strong><small>NEWS INTELLIGENCE</small></span>
+      </a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav class="nav-list">
+        <button class="nav-link active" data-view-link="overview"><span>▦</span> Overview</button>
+        <button class="nav-link" data-view-link="analyze"><span>⌕</span> Analyze news</button>
+        <button class="nav-link" data-view-link="history"><span>◷</span> Analysis history</button>
+        <div class="workspace-label nav-section-label">SYSTEM</div>
+        <button class="nav-link" data-view-link="model"><span>⌘</span> Model details</button>
+        <button class="nav-link" data-view-link="about"><span>ⓘ</span> About project</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="model-status"><span class="status-dot" id="sidebarStatusDot"></span><div><strong id="sidebarStatus">Checking model…</strong><small id="sidebarStatusText">Connecting to prediction API</small></div></div>
+        <div class="sidebar-note">AI-assisted screening, not a substitute for independent fact-checking.</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button mobile-menu" id="mobileMenu" aria-label="Open navigation">☰</button>
+          <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumbCurrent">Overview</strong></div>
+        </div>
+        <div class="topbar-right"><span class="live-indicator"><span></span> LOCAL WORKSPACE</span><span class="avatar">TL</span></div>
+      </header>
+
+      <section class="view-section active" id="view-overview">
+        <div class="hero">
+          <div class="hero-content">
+            <div class="eyebrow"><span class="sparkle">✦</span> AI-POWERED NEWS ANALYSIS</div>
+            <h1>See beyond the<br><em>headline.</em></h1>
+            <p>Screen news articles with your trained machine-learning model. Explore predictions, confidence scores, and influential terms in one workspace.</p>
+            <button class="button button-light" data-view-link="analyze">Analyze an article <span>↗</span></button>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="lens"><div class="lens-inner"><span>TL</span><b>TRUTH<br>SCANNER</b><small>MODEL ACTIVE</small></div></div>
+            <div class="floating-chip chip-top">✦ Pattern analysis</div>
+            <div class="floating-chip chip-bottom"><span class="chip-dot"></span> Model intelligence</div>
+          </div>
+          <div class="hero-glow"></div>
+        </div>
+
+        <div class="section-heading"><div><span class="eyebrow muted">YOUR WORKSPACE</span><h2>Analysis overview</h2><p>A live snapshot of your model and activity.</p></div><span class="date-pill" id="currentDate">Today</span></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Articles analyzed</span><span class="stat-icon violet">⌕</span></div><strong id="statAnalyzed">0</strong><small>Saved in this browser</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Model status</span><span class="stat-icon green">⌁</span></div><strong class="stat-text" id="statModel">Checking…</strong><small id="modelFoot">Connecting to API</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Training articles</span><span class="stat-icon blue">▤</span></div><strong id="statTraining">—</strong><small>Reported by saved model bundle</small></article>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel recent-panel"><div class="panel-heading"><div><h3>Recent activity</h3><p>Your latest article checks</p></div><button class="text-button" data-view-link="history">View history ↗</button></div><div id="recentActivity" class="activity-list"></div></article>
+          <article class="panel quick-panel"><div class="panel-heading"><div><h3>Quick analysis</h3><p>Start with a news article</p></div><span class="quick-icon">✦</span></div><div class="quick-illustration"><div class="paper-lines"><i></i><i></i><i></i><i></i></div><span class="scan-ring">⌕</span></div><p class="quick-copy">Paste a headline and article text to get a model prediction and see which terms influenced the result.</p><button class="button button-primary full-width" data-view-link="analyze">Start analysis <span>→</span></button></article>
+        </div>
+        <p class="disclaimer">Important: A model prediction is a statistical classification, not proof that a claim is true or false. Confirm important claims with reliable independent sources.</p>
+      </section>
+
+      <section class="view-section" id="view-analyze">
+        <div class="page-heading"><div><span class="eyebrow muted">PREDICTION WORKSPACE</span><h1>Analyze <em>news.</em></h1><p>Submit article text to your trained classifier and inspect its output.</p></div><span class="page-icon">⌕</span></div>
+        <div class="analyzer-layout">
+          <div class="panel input-panel">
+            <div class="panel-heading"><div><h3>Article input</h3><p>Provide the content you want to screen.</p></div><span class="step-tag">STEP 01</span></div>
+            <div class="input-tabs" role="tablist"><button id="textTab" class="input-tab active" role="tab" aria-selected="true">Paste text</button><button id="urlTab" class="input-tab" role="tab" aria-selected="false">Article URL</button></div>
+            <div id="textMode">
+              <label for="newsTitle">Headline <span>OPTIONAL</span></label>
+              <input id="newsTitle" class="text-input" type="text" maxlength="300" placeholder="Enter the news headline…">
+              <label for="newsText">Article content <span>REQUIRED</span></label>
+              <textarea id="newsText" class="text-area" rows="12" placeholder="Paste the full news article here for a more useful model input…"></textarea>
+              <div class="input-footer"><span id="wordCounter">0 words</span><span>Tip: Ctrl + Enter to analyze</span></div>
+              <div id="formError" class="form-error hidden" role="alert"></div>
+              <button id="analyzeButton" class="button button-primary full-width"><span id="analyzeButtonText">Analyze article</span><span>→</span></button>
+              <p class="privacy-note">Your submitted text is sent to your local Flask server for prediction.</p>
+            </div>
+            <div id="urlMode" class="url-mode hidden"><div class="url-notice"><strong>URL analysis is not connected yet</strong><p>This build analyzes pasted article text. To support URLs, a backend extractor must be added; many sites block automated access.</p></div><button id="backToText" class="button button-secondary">Back to paste text</button></div>
+          </div>
+
+          <div class="panel result-panel" id="resultPanel">
+            <div class="panel-heading"><div><h3>Prediction result</h3><p>Model output and interpretation</p></div><span class="step-tag">STEP 02</span></div>
+            <div id="resultPlaceholder" class="result-placeholder"><div class="placeholder-art"><span class="placeholder-orbit"></span><span class="placeholder-lens">✦</span></div><h3>Ready to inspect</h3><p>Your prediction will appear here after you analyze an article.</p><div class="placeholder-divider"></div><div class="placeholder-line"><span></span><i></i></div><div class="placeholder-line short"><span></span><i></i></div></div>
+            <div id="resultContent" class="result-content hidden">
+              <span id="resultBadge" class="prediction-badge">PREDICTION</span>
+              <h2 id="predictionTitle" class="prediction-title">—</h2>
+              <p id="predictionDescription" class="result-description"></p>
+              <div class="confidence-heading"><span>Model confidence</span><strong id="confidenceValue">—</strong></div>
+              <div class="confidence-track"><span id="confidenceFill"></span></div>
+              <p class="muted-small">Confidence is derived from the classifier's predicted class probability; it is not a guarantee of truth.</p>
+              <div class="probability-grid"><div><span class="prob-dot real-dot"></span><span>REAL score</span><strong id="realScore">—</strong></div><div><span class="prob-dot fake-dot"></span><span>FAKE score</span><strong id="fakeScore">—</strong></div></div>
+              <div class="explanation-block"><h4>Terms supporting REAL</h4><div id="realWords" class="word-chips"></div></div>
+              <div class="explanation-block"><h4>Terms supporting FAKE</h4><div id="fakeWords" class="word-chips"></div></div>
+              <div class="result-bottom"><span id="resultWords">— words</span><button id="analyzeAnother" class="text-button">New analysis ↗</button></div>
+            </div>
+          </div>
+        </div>
+        <p class="disclaimer">Do not rely on this prediction alone for consequential decisions. Dataset bias and unfamiliar topics can affect model performance.</p>
+      </section>
+
+      <section class="view-section" id="view-history">
+        <div class="page-heading"><div><span class="eyebrow muted">LOCAL RECORDS</span><h1>Analysis <em>history.</em></h1><p>Search and review the predictions saved in this browser.</p></div><span class="page-icon">◷</span></div>
+        <div class="panel history-panel"><div class="history-toolbar"><div><h3>Past analyses</h3><p id="historyCount">0 analyses</p></div><div class="history-actions"><input id="historySearch" class="search-input" placeholder="Search history…" aria-label="Search history"><button id="clearHistory" class="button button-secondary">Clear history</button></div></div><div id="historyList" class="history-list"></div></div>
+        <p class="disclaimer">History is stored only in this browser's local storage. It is not shared between devices and is not a server-side database.</p>
+      </section>
+
+      <section class="view-section" id="view-model">
+        <div class="page-heading"><div><span class="eyebrow muted">MODEL INFORMATION</span><h1>Model <em>details.</em></h1><p>Metadata reported by the trained model bundle on disk.</p></div><span class="page-icon">⌘</span></div>
+        <div class="stats-grid model-stats"><article class="stat-card"><div class="stat-top"><span>Deployment</span><span class="stat-icon green">⌁</span></div><strong id="detailStatus">Checking…</strong><small>Flask prediction API</small></article><article class="stat-card"><div class="stat-top"><span>Classifier</span><span class="stat-icon violet">⌘</span></div><strong class="stat-text" id="modelName">—</strong><small>Loaded from model.joblib</small></article><article class="stat-card"><div class="stat-top"><span>Training records</span><span class="stat-icon blue">▤</span></div><strong id="detailTraining">—</strong><small>Metadata value</small></article><article class="stat-card"><div class="stat-top"><span>CV F1 mean</span><span class="stat-icon amber">◎</span></div><strong id="detailF1">—</strong><small>Only shown if available</small></article></div>
+        <div class="panel"><div class="panel-heading"><div><h3>Saved evaluation metrics</h3><p>Values stored in the model bundle</p></div><span id="modelStatusPill" class="status-pill">Checking…</span></div><div id="metricsTable" class="metrics-table"><p class="muted-text">Loading metrics…</p></div></div>
+        <div class="notice-card"><strong>Model limitations</strong><p>This dashboard uses the saved classifier as-is. The output reflects learned dataset patterns, which can include bias or leakage. Use external sources to verify claims.</p></div>
+      </section>
+
+      <section class="view-section" id="view-about">
+        <div class="page-heading"><div><span class="eyebrow muted">PROJECT OVERVIEW</span><h1>About <em>TruthLens.</em></h1><p>A machine-learning project for preliminary fake-news classification.</p></div><span class="page-icon">ⓘ</span></div>
+        <div class="about-grid"><article class="panel about-main"><span class="about-mark">TL</span><h2>News screening with machine learning.</h2><p>TruthLens AI connects a browser dashboard to a locally saved text-classification model. Users submit a headline and article body, the backend transforms the text with the saved vectorizer, and the classifier returns a REAL/FAKE prediction.</p><p>The explanation panel displays influential terms when the model supports coefficient-based explanations.</p></article><article class="panel"><h3>How it works</h3><ol class="workflow"><li><span>01</span><div><strong>Input</strong><p>Paste headline and article text.</p></div></li><li><span>02</span><div><strong>Preprocess</strong><p>Clean text and apply the saved vectorizer.</p></div></li><li><span>03</span><div><strong>Predict</strong><p>Calculate the model's REAL probability.</p></div></li><li><span>04</span><div><strong>Explain</strong><p>Show prediction scores and influential terms.</p></div></li></ol></article></div>
+        <div class="notice-card"><strong>Responsible use</strong><p>This is a research and educational tool. It does not independently verify facts, identify the original source, or guarantee whether an article is true. Confirm important claims with reputable independent sources.</p></div>
+      </section>
+
+      <footer class="footer"><span>© 2026 TruthLens AI</span><span>Built for transparent, responsible news screening</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+</html>
